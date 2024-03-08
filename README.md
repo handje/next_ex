@@ -68,3 +68,21 @@ export default function Read(props) {
 
 - SSR지원: 브라우저 콘솔에서 js를 비활성화 시켜도 렌더링이 유지
 - content만 변경되어도 전체 페이지가 리로딩되고, 이미 방문한 페이지도 기억 x => link사용하여 SinglePageApplication으로 생성
+
+## backend
+
+1. 백엔드로 이용하고 싶을 땐 Route Handlers참고하여 api로 생성 가능
+2. json-server
+
+1) npx json-server@0.17.4 --port 9999 --watch db.json
+
+- port 9999
+- db.json 생성 및 데이터 저장
+- --watch : db.json이 변경되면 서버 동작
+
+2. db.json
+   "topics": [{ "id": 1, "title": "html", "body": "html is,,," }] 내용 추가 후 http://localhost:9999/topics 방문하면 json형태의 내용을 출력
+3. 데이터 가져오기
+
+- 브라우저의 개발자도구>console
+- fetch('http://localhost:9999/topics').then((res)=>{return res.json();}).then(result=>{console.log(result)})
