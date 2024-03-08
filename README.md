@@ -86,3 +86,67 @@ export default function Read(props) {
 
 - 브라우저의 개발자도구>console
 - fetch('http://localhost:9999/topics').then((res)=>{return res.json();}).then(result=>{console.log(result)})
+
+## SeverComponent, ClientComponet
+
+- react18 에서 추가된 부분
+- react18 이전에 분리되기 전에는 보통 Client Component를 구현
+- 사용할수있는 api가 다름
+  1. Server Component : secure data, cookie, header
+  2. Client Component : useState,useEffect, onClick,onChange, useRouter,useParams
+  3. 공통 : fetch
+- 특별한 처리가 없으면 nextJS는 Server Component로 간주
+- example
+  [사진]
+
+  1. Server Component : navbar,sidebar,main => 정보를 단순히 보여주는 기능
+  2. Client Component : search, button => 사용자와 상호작용하는 기능
+
+- 두 코드 비교
+
+  1. ClientC
+
+  - "use client"선언이 있어야함
+  - fetching(서버에서 클라이언트로 데이터를 가져옴)의 시간이 오래 걸릴 수 있음 (비동기적 코드)
+  - 자바스크립트가 disable일 경우 서버통신 부분은 실행되지 않음 (useEffect등)
+  - 디비에 접속할 때, 코드에 보여줄 경우 보안의 문제가 생길 수 있음
+
+  ```js
+  "use client"; //선언이 없으면 server component로 인식하여 useState,useEffect 사용 x
+  //meta data는 사용 x
+
+  //데이터를 가져오는 부분
+  const [topics, setTopics] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:9999/topics")
+      .then((resp) => resp.json())
+      .then((res) => {
+        setTopics(res);
+      });
+  });
+
+  //읽은 내용을 화면에 뿌리기
+  {
+    topics.map((topic) => {
+      return (
+        <li key={topic.id}>
+          <Link href={`/read/${topic.id}`}>{topic.title}</Link>
+        </li>
+      );
+    });
+  }
+  ```
+
+2. ServerC
+
+- 선언이 없으면 자동으로 Server Component
+- 동기적으로 코딩 (async - await)
+- 만들어진 결과를 저장해두고 정적인 내용을 전달(클라이언트로 js를 전달하지 않음) => 속도가 빠름
+
+```js
+export default async function RootLayout({ children }) {
+  const resp = await fetch("http://localhost:9999/topics");
+  const topics = await resp.json();
+  //...
+}
+```
