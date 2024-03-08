@@ -63,3 +63,8 @@ export default function Read(props) {
   );
 }
 ```
+
+### 네트워크 관련 특징
+
+- SSR지원: 브라우저 콘솔에서 js를 비활성화 시켜도 렌더링이 유지
+- content만 변경되어도 전체 페이지가 리로딩되고, 이미 방문한 페이지도 기억 x => link사용하여 SinglePageApplication으로 생성
