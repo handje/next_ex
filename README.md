@@ -150,3 +150,49 @@ export default async function RootLayout({ children }) {
   //...
 }
 ```
+
+## READ
+
+```js
+export default async function Read(props) {
+  const resp = await fetch(`http://localhost:9999/topics/${props.params.id}`);
+  const topic = await resp.json();
+  //...
+}
+```
+
+## Write
+
+- options(method,header,body)를 포함하여 fetch
+- router를 이용하여 생성된 후 보여지는 화면을 리디렉션
+
+```js
+  "use client"; //사용자와 상호작용(onSubmit)하는 기능이기 때문에
+  import { useRouter } from "next/navigation";
+  //...
+  const router = useRouter();
+  //...
+   <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        const title=event.target.title.value;
+        const body=event.target.title.body;
+
+        //서버에 정보를 추가하기 위한 option
+        const options={
+          method:'POST',
+          headers:{
+            'Content-type':'application/json'
+          },
+          body:JSON.stringify({title,body}) //object->json문자열로
+        }
+          fetch("http://localhost:9999/topics", options)
+          .then((resp) => resp.json())
+          .then((res) => {
+            const lastID = res.id;
+            router.push(`/read/${lastID}`); //생성된 id의 내용으로 read
+          });
+      }}
+    >
+
+```
