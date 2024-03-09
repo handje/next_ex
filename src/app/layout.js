@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Control } from "./Control";
 
 export const metadata = {
   title: "Next App Example",
@@ -27,17 +28,7 @@ export default async function RootLayout({ children }) {
           })}
         </ol>
         {children}
-        <ul>
-          <li>
-            <Link href="/create">Create</Link>
-          </li>
-          <li>
-            <Link href="/update">Update</Link>
-          </li>
-          <li>
-            <input type="button" value="delete" />
-          </li>
-        </ul>
+        <Control />
       </body>
     </html>
   );

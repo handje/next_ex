@@ -197,7 +197,7 @@ export default async function Read(props) {
 
 ```
 
-### Cache
+## Cache
 
 - 최초로 접속할때 가지고온 정보를 저장하기때문에 바로 수정사항이 갱신되지 않음
 
@@ -217,4 +217,41 @@ fetch("http://localhost:9999/topics", { cache: "no-store" });
 //create폴더에서 router로 이동 후 refresh
 router.push(`/read/${lastID}`);
 router.refresh(); //화면새로고침, 서버컴포넌트를 강제로 다시 랜더링하도록 하는 함수
+```
+
+## UPDATE
+
+1. 버튼 구현
+
+- 주소의 id여부로 버튼을 보여줄지 결정 => layout은 밖에 있기때문에 props로 x => useParams사용
+- 일부분만 별도의 client component로 구현하여 useParams사용
+
+```js
+//버튼 구현 componet
+"use client"; //client component
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
+export function Control() {
+  const params = useParams();
+  const id = params?.id;
+
+  return (
+    <ul>
+      <li>
+        <Link href="/create">Create</Link>
+      </li>
+      {id ? ( //id 여부에 따라 버튼 출력
+        <>
+          <li>
+            <Link href={`/update/${id}`}>Update</Link>
+          </li>
+          <li>
+            <input type="button" value="delete" />
+          </li>
+        </>
+      ) : null}
+    </ul>
+  );
+}
 ```
