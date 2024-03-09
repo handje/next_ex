@@ -22,6 +22,7 @@ export default function Create() {
           .then((res) => {
             const lastID = res.id;
             router.push(`/read/${lastID}`);
+            router.refresh();
           });
       }}
     >

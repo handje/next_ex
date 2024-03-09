@@ -196,3 +196,25 @@ export default async function Read(props) {
     >
 
 ```
+
+### Cache
+
+- 최초로 접속할때 가지고온 정보를 저장하기때문에 바로 수정사항이 갱신되지 않음
+
+1.  최초 저장 -> cache:MISS
+2.  이미 저장된 정보 -> cache:HIT
+    =>revalidating data를 통해 해결
+
+- 간단히 사용할때는 패치 결과를 캐시에 저장하지 않을 수 있음 ( 성능 저하 가능성 o)
+
+```js
+//1. _초 동안만 캐시를 유지, 시간이 지나면 캐시가 다시 만들어짐
+fetch("http://localhost:9999/topics", { next: { revalidate: 0 } });
+
+//2.캐시 정책을 저장하지않는다로 설정
+fetch("http://localhost:9999/topics", { cache: "no-store" });
+
+//create폴더에서 router로 이동 후 refresh
+router.push(`/read/${lastID}`);
+router.refresh(); //화면새로고침, 서버컴포넌트를 강제로 다시 랜더링하도록 하는 함수
+```
