@@ -219,7 +219,7 @@ router.push(`/read/${lastID}`);
 router.refresh(); //화면새로고침, 서버컴포넌트를 강제로 다시 랜더링하도록 하는 함수
 ```
 
-## UPDATE
+## UPDATE & DELETE
 
 1. 버튼 구현
 
@@ -255,3 +255,73 @@ export function Control() {
   );
 }
 ```
+
+2. update
+
+(1) write와 같은 폼
+(2) fetch를 통해 id값에 해당하는 내용 불러오기\_useState,useEffect
+
+```js
+//기존값 받아와서 초기값으로 설정
+  const params = useParams();
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  useEffect(() => {
+    fetch(`http://localhost:9999/topics/${params?.id}`)
+      .then((resp) => resp.json())
+      .then((res) => {
+        setTitle(res.title);
+        setBody(res.body);
+      });
+  }, []);
+
+  //입력값 받기
+   <p>
+        <input
+          type="text"
+          name="title"
+          placeholder="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </p>
+      <p>
+        <input
+          type="text"
+          name="body"
+          placeholder="body"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        />
+      </p>
+```
+
+(3) put으로 보내기
+
+```js
+const options = {
+  method: "PUT",
+  headers: {
+    "Content-type": "application/json",
+  },
+  body: JSON.stringify({ title, body }),
+};
+```
+
+(4) refresh
+
+```js
+fetch(`http://localhost:9999/topics/${params?.id}`, options)
+  .then((resp) => resp.json())
+  .then((res) => {
+    const lastID = res.id;
+    router.push(`/read/${lastID}`);
+    router.refresh();
+  });
+//read 부분 cache삭제
+const resp = await fetch(`http://localhost:9999/topics/${props.params.id}`, {
+  cache: "no-store",
+});
+```
+
+3. Delete
