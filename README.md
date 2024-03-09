@@ -86,6 +86,7 @@ export default function Read(props) {
 
 - 브라우저의 개발자도구>console
 - fetch('http://localhost:9999/topics').then((res)=>{return res.json();}).then(result=>{console.log(result)})
+  //json():json을 받아서 js객체로 변환
 
 ## SeverComponent, ClientComponet
 
@@ -325,3 +326,38 @@ const resp = await fetch(`http://localhost:9999/topics/${props.params.id}`, {
 ```
 
 3. Delete
+
+- delete버튼의 onClick이벤트 처리
+- method:"DELETE"
+- 완료되면 루트주소로 이동 + refresh
+
+```js
+import { useParams, useRouter } from "next/navigation";
+
+//...
+const router = useRouter();
+//...
+
+<input
+  type="button"
+  value="delete"
+  onClick={() => {
+    const options = { method: "DELETE" };
+    fetch("http://localhost:9999/topics/" + id, options)
+      .then((resp) => resp.json())
+      .then((res) => {
+        console.log("success");
+        router.push("/");
+        router.refresh();
+      });
+  }}
+/>;
+```
+
+## 환경변수
+
+- .env.local 파일에 숨길 정보를 저장 => 버전관리에서 제외 => .env.local.example 파일에 샘플 양식을 제공할 수 있음
+- 정의: API_URL=http://localhost:9999/
+- 사용: process.env.API_URL (서버컴포넌트)
+- 클라이언트 컴포넌트에 모든 정보를 전달할 수 없음(보안 문제 발생)
+  => 정의를 다르게 함= NEXT*PUBLIC*이름
